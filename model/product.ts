@@ -1,4 +1,4 @@
-class Product {
+/*class Product {
   item_no: number;
   item_name: string;
   detail_image_url: string;
@@ -13,5 +13,13 @@ class Product {
     this.score = product.score;
     this.item_no = product.item_no;
   }
+}
+*/
+interface Product {
+  item_no: number;
+  item_name: string;
+  detail_image_url: string;
+  price: number;
+  score: number;
 }
 export default Product;

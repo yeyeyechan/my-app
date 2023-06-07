@@ -1,4 +1,4 @@
-// productItems.js
+
 const productItems = [
   {
     item_no: 122997,

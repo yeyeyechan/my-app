@@ -1,0 +1,40 @@
+.table {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  border-top: 4px solid rgb(0, 0, 0);
+  box-sizing: border-box;
+  font-size: 12px;
+  color: rgb(76, 76, 76);
+  border-bottom: 1px solid rgb(0, 0, 0);
+}
+.tableHead {
+  display: table-header-group;
+}
+.productDetail {
+  display: table-cell;
+  padding: 30px 0px;
+  border-top: 1px solid rgb(228, 228, 228);
+  font-size: 18px;
+  line-height: 24px;
+  color: rgb(0, 0, 0);
+  text-align: center;
+  vertical-align: middle;
+  width: 4.3%;
+}
+.tableRow {
+  display: table-row;
+  position: relative;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 12px;
+  color: rgb(76, 76, 76);
+  border-bottom: 1px solid rgb(0, 0, 0);
+}
+.tableCell {
+  display: table-cell;
+}

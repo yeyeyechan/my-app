@@ -2,11 +2,10 @@ import { createContext, useState } from 'react';
 import { produce } from 'immer';
 import Cart from '../model/cart';
 import coupons from '../data/coupon';
-interface CartList extends Array<Cart> {}
-
+import { CartList } from '../model/cart';
 type cartObj = {
   cartList: CartList;
-  setCarts: (cart: Cart) => void;
+  setCarts: (cartList: CartList) => void;
 };
 export const CartContext = createContext<cartObj>({
   cartList: [],
@@ -15,17 +14,8 @@ export const CartContext = createContext<cartObj>({
 
 const CartContextProvider: React.FC<{ children: React.ReactNode }> = (props) => {
   const [carts, setCarts] = useState<CartList>([]);
-  const setCartsHandler = (cart: Cart) => {
-    setCarts(
-      produce((draft) => {
-        let findIndex = draft.findIndex((ele) => ele.item_no === cart.item_no);
-        if (findIndex === -1) draft.concat(cart);
-        else {
-          draft[findIndex].count = cart.count;
-          draft[findIndex].coupon = cart.coupon;
-        }
-      })
-    );
+  const setCartsHandler = (carts: CartList) => {
+    setCarts(carts);
   };
   const value = {
     cartList: carts,

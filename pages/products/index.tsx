@@ -5,7 +5,8 @@ import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { PageContext } from '../../store/pagination';
 import { CartContext } from '../../store/cartContext';
-import Cart from '../../model/cart';
+import Cart, { CartList } from '../../model/cart';
+import { produce } from 'immer';
 const Products: React.FC<{ products: Product[] }> = (props) => {
   const { page, setCurrentPage } = useContext(PageContext);
   const { cartList, setCarts } = useContext(CartContext);
@@ -20,11 +21,14 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
     .sort((a, b) => b.score - a.score)
     .slice(5 * (page.currentPageNo - 1), 5 * page.currentPageNo);
   const handleClickCart = (cart: Cart) => {
-    console.log(cart);
     let copy = { ...cart };
+    copy.checked = false;
     copy.count = 1;
     copy.coupon = { type: '', title: '', discountRate: 0, discountAmount: 0 };
-    setCarts(copy);
+    let newCartList = cartList.map((ele) => ele);
+    newCartList.push(copy);
+    setCarts(newCartList);
+    router.push('/cart');
   };
   return (
     <div>

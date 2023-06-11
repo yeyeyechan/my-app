@@ -7,11 +7,22 @@ import CartBottom from '../../components/CartBottom';
 import axios from 'axios';
 import Coupon from '../../model/coupon';
 import Modal from '../../components/ui/Modal';
+import LocalStorage from '../../model/LocalStorage';
+import { UiContext } from '../../store/uiContext';
+import SelectItem from '../../components/ui/SelectItem';
+import { CouponList } from '../../model/coupon';
+const sectionCss = css`
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+`;
 const table = css`
   display: table;
   width: 100%;
   table-layout: fixed;
   border-top: 4px solid rgb(0, 0, 0);
+  margin: 0;
+  padding: 0;
 `;
 
 const tableCell = css`
@@ -25,6 +36,7 @@ const tableCell = css`
   color: rgb(0, 0, 0);
   vertical-align: middle;
   text-align: center;
+  box-sizing: border-box;
 `;
 const bottomCss = css`
   margin-top: 30px;
@@ -57,18 +69,69 @@ const pCss = css`
 const Cart: React.FC = () => {
   const { cartList, setCarts } = useContext(CartContext);
   const [isShow, setIsShow] = useState(false);
-
+  const [coupon, setCoupon] = useState({ type: '', title: '' });
+  const { select, setSelect } = useContext(UiContext);
   useEffect(() => {
     async function getCoupons() {
-      const couponList = await axios.get<Coupon[]>('/api/coupons');
-      console.log(couponList.data);
+      let localdata = JSON.parse(LocalStorage.getItem('couponList') || '[]');
+      if (localdata.length === 0) {
+        let couponList = await axios.get<Coupon[]>('/api/coupons');
+        couponList.data.forEach((ele) => (ele.idx = ''));
+        LocalStorage.setItem('couponList', JSON.stringify(couponList.data));
+      }
+      setCoupon(localdata);
+      console.log(localdata);
     }
     getCoupons();
   }, []);
+
+  const clickInput = (productIdx: number) => {
+    let _coupon: Coupon[] = [
+      {
+        type: '',
+        title: '사용 안함'
+      }
+    ];
+    _coupon = _coupon.concat(coupon);
+    setSelect(
+      <SelectItem couponList={_coupon} productIdx={productIdx} handleSetCoupon={handleSetCoupon} />
+    );
+  };
+  const handleSetCoupon = (coupon: Coupon, idx: number) => {
+    let _idx = coupon.idx;
+    coupon.idx = '';
+    let newCartList = cartList.map((ele) => ele);
+    if (coupon.type === '') {
+      newCartList.forEach((ele) => {
+        if (ele.idx === _idx) {
+          ele.coupon = { type: '', title: '', discountRate: 0, discountAmount: 0 };
+        }
+      });
+      setCoupon(coupon);
+      setCarts(newCartList);
+      setSelect(null);
+    } else {
+      coupon.idx = idx;
+      newCartList.forEach((ele) => {
+        if (ele.idx === idx) {
+          ele.coupon = {
+            type: coupon.type,
+            title: coupon.title,
+            discountRate: coupon.discountRate as any,
+            discountAmount: coupon.discountAmount as any
+          };
+        }
+      });
+      setCoupon(coupon);
+      setCarts(newCartList);
+      setSelect(null);
+    }
+  };
   const onClickDelete = (idx: number) => {
     let newCartList = cartList.filter((ele, index) => index !== idx);
 
     setCarts(newCartList);
+    LocalStorage.setItem('cartList', JSON.stringify(newCartList));
   };
   const handleSelectedDelete = () => {
     let newCartList = cartList.filter((ele, index) => !ele.checked);
@@ -140,10 +203,15 @@ const Cart: React.FC = () => {
         onClick={() => {
           setIsShow(false);
         }}
+        isCancelClick={() => {
+          setIsShow(false);
+        }}
+        isCancel={false}
+        text={'해당 옵션의 구매 가능 수량은 2개 입니다.'}
       />
 
-      <section>
-        <div>
+      <section css={sectionCss}>
+        <div css={{ boxSizing: 'border-box', borderBottom: '1px solid rgb(0, 0, 0)' }}>
           <div css={table}>
             <div css={[tableCell, { width: '4.3%' }]}>
               <span>
@@ -164,6 +232,8 @@ const Cart: React.FC = () => {
               onClickDelete={onClickDelete}
               handleCheckBox={handleCheckBox}
               onClickCount={onClickCount}
+              clickInput={clickInput}
+              selectItem={select}
             />
           ))}
         </div>

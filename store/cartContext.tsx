@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { produce } from 'immer';
 import Cart from '../model/cart';
 import coupons from '../data/coupon';
@@ -13,10 +13,17 @@ export const CartContext = createContext<cartObj>({
 });
 
 const CartContextProvider: React.FC<{ children: React.ReactNode }> = (props) => {
+  useEffect(() => {
+    let defaultCarts = JSON.parse(localStorage.getItem('cartList') || '[]');
+
+    setCarts(defaultCarts);
+  }, []);
+
   const [carts, setCarts] = useState<CartList>([]);
   const setCartsHandler = (carts: CartList) => {
     setCarts(carts);
   };
+
   const value = {
     cartList: carts,
     setCarts: setCartsHandler

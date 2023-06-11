@@ -21,5 +21,6 @@ interface Product {
   detail_image_url: string;
   price: number;
   score: number;
+  [key: string]: any;
 }
 export default Product;

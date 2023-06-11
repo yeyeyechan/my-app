@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { Ref, useRef } from 'react';
 
 const divStyle = css`
   position: absolute;
@@ -75,12 +76,18 @@ const confirmButton = css`
   text-align: center;
   box-sizing: border-box;
 `;
-const Modal: React.FC<{ isShow: boolean; onClick: () => void }> = (props) => {
+const Modal: React.FC<{
+  isShow: boolean;
+  text: string;
+  isCancel: boolean;
+  isCancelClick: () => void;
+  onClick: () => void;
+}> = (props) => {
   return (
     <div css={divStyle} style={props.isShow ? { display: 'block' } : { display: 'none' }}>
       <div css={innerDiv}>
         <button css={crossButtonStyle} type="button"></button>
-        <div css={contentDiv}>해당 옵션의 구매 가능 수량은 2개 입니다.</div>
+        <div css={contentDiv}>{props.text}</div>
         <div css={buttonWrap} className="">
           <button
             css={confirmButton}
@@ -91,6 +98,16 @@ const Modal: React.FC<{ isShow: boolean; onClick: () => void }> = (props) => {
           >
             확인
           </button>
+          {props.isCancel && (
+            <button
+              onClick={() => {
+                props.isCancelClick();
+              }}
+              css={confirmButton}
+            >
+              취소
+            </button>
+          )}
         </div>
       </div>
     </div>

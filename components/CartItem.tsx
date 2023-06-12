@@ -112,36 +112,6 @@ const CartItem: React.FC<{
             <span>{cart.price * cart.count}</span>원
           </div>
         </div>
-        {/*<div css={[tableCell, { width: '15%', borderLeft: ' 1px solid rgb(228, 228, 228)' }]}>
-          <div css={divWrap}>
-            <div css={divInner}>
-              <div role="button" css={couponButton}>
-                <input
-                  placeholder={
-                    cart.coupon.title
-                      ? cart.coupon.title
-                      : cart.availableCoupon
-                      ? '사용 가능한 쿠폰 2개'
-                      : '사용 가능 쿠폰 없음'
-                  }
-                  type="text"
-                  value=""
-                  css={inputCss}
-                  onClick={() => {
-                    clickSelect(cart.idx);
-                  }}
-                  readOnly
-                />
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 16" css={svgCss}>
-                  <g fill="none" fillRule="evenodd" stroke="rgb(212, 212, 212)" strokeWidth="3">
-                    <path d="M28 1L13.97 15 0 1.058"></path>
-                  </g>
-                </svg>
-              </div>
-              {selectItem}{' '}
-            </div>
-          </div>
-                </div>{' '}*/}
       </div>
     </div>
   );

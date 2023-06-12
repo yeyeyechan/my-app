@@ -5,7 +5,5 @@ export const licss = css`
 `;
 export const DynamicCss = styled.li<{ idx: number }>`
   display: ${(props) => (props.idx !== 0 && (props.idx + 1) % 5 === 0 ? 'table' : '')};
-  width: ${(props) => (props.idx !== 0 && (props.idx + 1) % 5 === 0 ? '' : '50%')};
-  margin-left: ${(props) => (props.idx !== 0 && (props.idx + 1) % 5 === 0 ? 'auto' : '')};
-  margin-right: ${(props) => (props.idx !== 0 && (props.idx + 1) % 5 === 0 ? 'auto' : '')};
+  width: ${(props) => (props.idx !== 0 && (props.idx + 1) % 5 === 0 ? '50%' : '50%')};
 `;

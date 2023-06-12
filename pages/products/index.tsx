@@ -2,7 +2,7 @@ import ProductItem from '../../components/ProductItem';
 import axios from 'axios';
 import Product from '../../model/product';
 import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { PageContext } from '../../store/pagination';
 import { CartContext } from '../../store/cartContext';
 import Cart from '../../model/cart';
@@ -11,29 +11,8 @@ import { ProductContext } from '../../store/productContext';
 import { NextApiRequest } from 'next';
 import Modal from '../../components/ui/Modal';
 import { UiContext } from '../../store/uiContext';
-import { ulcss } from './indexCss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-const divIcon = css`
-  position: relative;
-  margin: 0;
-  padding: 0;
-`;
-const divIconWrap = css`
-  padding: 29px 25px 0;
-  width: 120px;
-  height: 30px;
-  margin: 0;
-`;
-const aLinkIcon = css`
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: top;
-  line-height: 100em;
-  background: url(//img.29cm.co.kr/next-next_attach/2023/05/24/244dfcad0e1c4490b2a7d6fd85aa20fe_20230524160435.png);
-  background-size: 60px 16px;
-  width: 60px;
-  height: 16px;
-`;
+import ulcss, { divIcon, divIconWrap, aLinkIcon } from '../../components/productcss';
+
 const Products: React.FC<{ products: Product[] }> = (props) => {
   const { page, setCurrentPage } = useContext(PageContext);
   const { cartList, setCarts } = useContext(CartContext);
@@ -113,7 +92,7 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
             setModal(null);
             router.push('/cart');
           }}
-          text={'장바구니에 상품이 추가되었습니다. 장바구니로 이동하시겠습니까?'}
+          text={'장바구니에 추가되었습니다. 장바구니로 이동하시겠습니까?'}
         />
       );
     }

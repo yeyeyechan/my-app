@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { jsx, css } from '@emotion/react';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState, useRef } from 'react';
 import { CartContext } from '../../store/cartContext';
 import CartItem from '../../components/CartItem';
 import CartBottom from '../../components/CartBottom';
@@ -10,8 +10,7 @@ import Modal from '../../components/ui/Modal';
 import LocalStorage from '../../model/LocalStorage';
 import { UiContext } from '../../store/uiContext';
 import SelectItem from '../../components/ui/SelectItem';
-import {
-  sectionCss,
+import sectionCss, {
   table,
   tableCell,
   bottomCss,
@@ -22,7 +21,7 @@ import {
   svgCss,
   divInner,
   couponButton
-} from './indexCss';
+} from '../../components/cartcss';
 
 const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
   const { cartList, setCarts } = useContext(CartContext);
@@ -31,7 +30,7 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
   const { select, setSelect } = useContext(UiContext);
   const { modal, setModal } = useContext(UiContext);
   const couponData = props.coupons; //쿠폰 데이터를 가져온다.
-
+  const clickAllRef = useRef(null);
   const clickSelect = () => {
     let _coupon: Coupon[] = [
       {
@@ -108,10 +107,20 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
     LocalStorage.setItem('cartList', JSON.stringify(newCartList));
   };
   const onClickCheckAll = () => {
-    let newCartList = cartList.map((ele) => {
-      ele.checked = !ele.checked;
-      return ele;
-    });
+    const target = clickAllRef.current as any;
+    let newCartList = [];
+    if (target.checked) {
+      newCartList = cartList.map((ele) => {
+        ele.checked = true;
+        return ele;
+      });
+    } else {
+      newCartList = cartList.map((ele) => {
+        ele.checked = !ele.checked;
+        return ele;
+      });
+    }
+
     setCarts(newCartList);
     LocalStorage.setItem('cartList', JSON.stringify(newCartList));
   };
@@ -147,7 +156,7 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
       }
     });
     return count;
-  }, [cartList, coupon]);
+  }, [cartList]);
   //쿠폰 할인 금액
   const couponAmount = useMemo(() => {
     let couponAmount = 0;
@@ -176,8 +185,9 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
             <div css={[tableCell, { width: '4.3%' }]}>
               <span>
                 <input
+                  ref={clickAllRef}
                   type="checkbox"
-                  onClick={() => {
+                  onClick={(e) => {
                     onClickCheckAll();
                   }}
                 />

@@ -2,57 +2,62 @@ import ProductItem from '../../components/ProductItem';
 import axios from 'axios';
 import Product from '../../model/product';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { PageContext } from '../../store/pagination';
 import { CartContext } from '../../store/cartContext';
-import Cart, { CartList } from '../../model/cart';
+import Cart from '../../model/cart';
 import { css } from '@emotion/react';
-import { produce } from 'immer';
 import { ProductContext } from '../../store/productContext';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest } from 'next';
 import Modal from '../../components/ui/Modal';
 import { UiContext } from '../../store/uiContext';
-
-const ulcss = css`
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 0 0 -20px;
+import { ulcss } from './indexCss';
+const divIcon = css`
+  position: relative;
+  margin: 0;
+  padding: 0;
+`;
+const divIconWrap = css`
+  padding: 29px 25px 0;
+  width: 120px;
+  height: 30px;
+  margin: 0;
+`;
+const aLinkIcon = css`
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: 100em;
+  background: url(https://img.29cm.co.kr/next-product/2020/12/14/3cfbcfb2cd5842939861b4add12397fe_20201214160430.jpg?width=500");
+  background-size: 60px 16px;
+  width: 60px;
+  height: 16px;
 `;
 const Products: React.FC<{ products: Product[] }> = (props) => {
   const { page, setCurrentPage } = useContext(PageContext);
   const { cartList, setCarts } = useContext(CartContext);
   const { products, setAllProduct } = useContext(ProductContext);
   const { modal, setModal } = useContext(UiContext);
-  const [isShow, setIsShow] = useState(false);
-  const [modalTxt, setModalText] = useState('');
 
-  //setCurrentPage(pageNo);
   const router = useRouter();
   let _products: Product[] = [];
-
-  let _page = router.query['page'] as string;
-  console.log(_page);
   let pageCount = Math.ceil(props.products.length / 5);
   let paginations = Array.from({ length: pageCount }, (ele, index) => index + 1);
-  const modalRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    _products = props.products;
-    _products.sort((a, b) => b.score - a.score);
-    cartList.forEach((ele) => (_products[ele.idx].cart = true));
-    _products = _products.slice(5 * (page.currentPageNo - 1), 5 * page.currentPageNo);
 
-    setAllProduct(_products);
-    const node = modalRef.current;
-    node?.focus();
-    console.log(_products);
+  useEffect(() => {
+    //초기 랜더링, 페이지 변경, cartList 변경시 상품목록 화면 상태값 변경.
+    _products = props.products; //우선 전체목록을 불러온다.
+    _products.sort((a, b) => b.score - a.score); // 정렬
+    _products.forEach((ele) => (ele.cart = false));
+    cartList.forEach((ele) => (_products[ele.index].cart = true)); //장바구니 목록에있는 항목은 장바구니 여부 true로 설정
+    _products = _products.slice(5 * (page.currentPageNo - 1), 5 * page.currentPageNo); //보여줄 부분 파싱
+    setAllProduct(_products); //state 저장
   }, [cartList, page]);
 
-  const handleDeleteCart = (item_no: number, index: number) => {
-    let _cartList = cartList.filter((ele) => ele.item_no !== item_no);
-    let _products = products.map((ele) => ele);
-    _products[index - 5 * (page.currentPageNo - 1)].cart = false;
+  const handleDeleteCart = (index: number) => {
+    let _cartList = cartList.filter((ele) => ele.index !== index); // 상품 인덱스 값으로 필터
+
     setCarts(_cartList);
-    console.log('handleDelete');
 
     setModal(
       <Modal
@@ -60,7 +65,6 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
           setModal(null);
         }}
         isCancel={false}
-        isShow={true}
         onClick={() => {
           setModal(null);
         }}
@@ -69,49 +73,70 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
     );
     localStorage.setItem('cartList', JSON.stringify(_cartList));
   };
-  const handleClickCart = (cart: Cart, idx: number) => {
-    let copy = { ...cart };
-    copy.cart = true;
-    copy.idx = idx;
-    copy.checked = false;
-    copy.count = 1;
-    copy.coupon = { type: '', title: '', discountRate: 0, discountAmount: 0 };
-    copy.availableCoupon = copy.availableCoupon === undefined ? true : false;
+  const handleAddCart = (cart: Cart, index: number) => {
+    //index 는 전체 상품배열에서의 인덱스
+    cart.cart = true; // 장바구니 등록여부
+    cart.index = index; // 실제 인덱스
+    cart.checked = false; // 선택여뷰
+    cart.count = 1; //장바구니 추가시 기본 추가갯수
+    cart.coupon = { type: '', title: '', discountRate: 0, discountAmount: 0 }; //적용한 쿠폰정보
+    cart.availableCoupon = cart.availableCoupon === undefined ? true : false; //쿠폰 사용가능여부
     let newCartList = cartList.map((ele) => ele);
-    newCartList.push(copy);
-    console.log('handleClick');
-    setCarts(newCartList);
-    localStorage.setItem('cartList', JSON.stringify(newCartList));
-    setModal(
-      <Modal
-        isCancelClick={() => {
-          setModal(null);
-        }}
-        isCancel={true}
-        isShow={true}
-        onClick={() => {
-          setModal(null);
-          router.push('/cart');
-        }}
-        text={'장바구니에 상품이 추가되었습니다. 장바구니로 이동하시겠습니까?'}
-      />
-    );
+
+    newCartList.push(cart);
+    if (newCartList.length > 3) {
+      setModal(
+        <Modal
+          isCancelClick={() => {
+            setModal(null);
+          }}
+          isCancel={false}
+          onClick={() => {
+            setModal(null);
+          }}
+          text={'장바구니에는 최대 세 가지의 상품이 담길 수 있습니다'}
+        />
+      );
+      return;
+    } else {
+      setCarts(newCartList);
+      localStorage.setItem('cartList', JSON.stringify(newCartList)); //장바구니 정보는 로컬스토리지에 저장해둔다.
+      //장바구니 클릭시 보여줄 알림 모달 창.
+      setModal(
+        <Modal
+          isCancelClick={() => {
+            setModal(null);
+          }}
+          isCancel={true}
+          onClick={() => {
+            setModal(null);
+            router.push('/cart');
+          }}
+          text={'장바구니에 상품이 추가되었습니다. 장바구니로 이동하시겠습니까?'}
+        />
+      );
+    }
   };
 
-  const cartConfirmClick = () => {
-    router.push('/cart');
-  };
   return (
-    <div ref={modalRef}>
+    <div>
       {modal}
+      <div css={divIcon}>
+        <div css={divIconWrap}>
+          <a css={aLinkIcon} href="https://www.29cm.co.kr/home/">
+            29CM
+          </a>
+        </div>
+      </div>
       <ul css={ulcss}>
+        {/** index 는 page값을 사용해 실제 전체 배열에서의 값을 넘겨준다. 전체 배열에서의 인덱스로
+        접근해 수정하기 위함. */}
         {products.map((ele, index) => (
           <ProductItem
             key={ele.item_no}
             index={index + 5 * (page.currentPageNo - 1)}
             product={ele}
-            handleClick={handleClickCart}
-            //cartConfirmClick={cartConfirmClick}
+            handleAddCart={handleAddCart}
             handleDeleteCart={handleDeleteCart}
           />
         ))}
@@ -138,7 +163,7 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
   );
 };
 export async function getServerSideProps(req: NextApiRequest) {
-  console.log('test');
+  console.log('getServerSideProps');
   const res = await axios.get<Product[]>('http://localhost:3000/api/goods');
   console.log(res.data);
 

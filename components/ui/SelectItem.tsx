@@ -32,8 +32,7 @@ const licss = css`
 `;
 const SelectItem: React.FC<{
   couponList: CouponList;
-  handleSetCoupon: (coupon: Coupon, idx: number) => void;
-  productIdx: number;
+  onClickCoupon: (coupon: Coupon) => void;
 }> = (props) => {
   return (
     <ul css={[ulCss]}>
@@ -43,7 +42,7 @@ const SelectItem: React.FC<{
           css={licss}
           role="button"
           onClick={() => {
-            props.handleSetCoupon(ele, props.productIdx);
+            props.onClickCoupon(ele);
           }}
         >
           {ele.title}

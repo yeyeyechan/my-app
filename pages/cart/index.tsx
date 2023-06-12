@@ -5,143 +5,90 @@ import { CartContext } from '../../store/cartContext';
 import CartItem from '../../components/CartItem';
 import CartBottom from '../../components/CartBottom';
 import axios from 'axios';
-import Coupon from '../../model/coupon';
+import Coupon, { CouponList } from '../../model/coupon';
 import Modal from '../../components/ui/Modal';
 import LocalStorage from '../../model/LocalStorage';
 import { UiContext } from '../../store/uiContext';
 import SelectItem from '../../components/ui/SelectItem';
-import { CouponList } from '../../model/coupon';
-const sectionCss = css`
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-`;
-const table = css`
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-  border-top: 4px solid rgb(0, 0, 0);
-  margin: 0;
-  padding: 0;
-`;
+import {
+  sectionCss,
+  table,
+  tableCell,
+  bottomCss,
+  pCss,
+  selectDelete,
+  divWrap,
+  inputCss,
+  svgCss,
+  divInner,
+  couponButton
+} from './indexCss';
 
-const tableCell = css`
-  display: table-cell;
-  padding: 0px;
-  border: 0px;
-  height: 74px;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 24px;
-  color: rgb(0, 0, 0);
-  vertical-align: middle;
-  text-align: center;
-  box-sizing: border-box;
-`;
-const bottomCss = css`
-  margin-top: 30px;
-  display: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  justify-content: space-between;
-`;
-const selectDelete = css`
-  isplay: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  min-width: 40px;
-  min-height: 25px;
-  margin-right: 10px;
-  width: 130px;
-  height: 42px;
-  border: 1px solid rgb(160, 160, 160);
-  color: rgb(48, 48, 51);
-  font-size: 15px;
-`;
-const pCss = css`
-  color: rgb(0, 0, 0);
-  font-size: 15px;
-`;
-
-const Cart: React.FC = () => {
+const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
   const { cartList, setCarts } = useContext(CartContext);
-  const [isShow, setIsShow] = useState(false);
-  const [coupon, setCoupon] = useState({ type: '', title: '' });
+  const defaultCoupon: Coupon = { type: '', title: '', discountRate: 0, discountAmount: 0 };
+  const [coupon, setCoupon] = useState(defaultCoupon);
   const { select, setSelect } = useContext(UiContext);
-  useEffect(() => {
-    async function getCoupons() {
-      let localdata = JSON.parse(LocalStorage.getItem('couponList') || '[]');
-      if (localdata.length === 0) {
-        let couponList = await axios.get<Coupon[]>('/api/coupons');
-        couponList.data.forEach((ele) => (ele.idx = ''));
-        LocalStorage.setItem('couponList', JSON.stringify(couponList.data));
-      }
-      setCoupon(localdata);
-      console.log(localdata);
-    }
-    getCoupons();
-  }, []);
+  const { modal, setModal } = useContext(UiContext);
+  const couponData = props.coupons; //쿠폰 데이터를 가져온다.
 
-  const clickInput = (productIdx: number) => {
+  const clickSelect = () => {
     let _coupon: Coupon[] = [
       {
         type: '',
         title: '사용 안함'
       }
     ];
-    _coupon = _coupon.concat(coupon);
-    setSelect(
-      <SelectItem couponList={_coupon} productIdx={productIdx} handleSetCoupon={handleSetCoupon} />
-    );
+    _coupon = _coupon.concat(couponData); //선택 안함 case도 넣어주기 위해.
+    setSelect(<SelectItem couponList={_coupon} onClickCoupon={onClickCoupon} />);
   };
-  const handleSetCoupon = (coupon: Coupon, idx: number) => {
-    let _idx = coupon.idx;
-    coupon.idx = '';
-    let newCartList = cartList.map((ele) => ele);
-    if (coupon.type === '') {
-      newCartList.forEach((ele) => {
-        if (ele.idx === _idx) {
-          ele.coupon = { type: '', title: '', discountRate: 0, discountAmount: 0 };
-        }
-      });
-      setCoupon(coupon);
-      setCarts(newCartList);
-      setSelect(null);
-    } else {
-      coupon.idx = idx;
-      newCartList.forEach((ele) => {
-        if (ele.idx === idx) {
-          ele.coupon = {
-            type: coupon.type,
-            title: coupon.title,
-            discountRate: coupon.discountRate as any,
-            discountAmount: coupon.discountAmount as any
-          };
-        }
-      });
-      setCoupon(coupon);
-      setCarts(newCartList);
-      setSelect(null);
-    }
+  //쿠폰선택 함수
+  const onClickCoupon = (coupon: Coupon) => {
+    setCoupon(coupon); //쿠폰정보 state
+    setSelect(null); //셀렉트창 올리기
   };
+  //장바구니 목록에서 삭제
   const onClickDelete = (idx: number) => {
     let newCartList = cartList.filter((ele, index) => index !== idx);
-
     setCarts(newCartList);
     LocalStorage.setItem('cartList', JSON.stringify(newCartList));
   };
+  //선택상품 전체 삭제
   const handleSelectedDelete = () => {
-    let newCartList = cartList.filter((ele, index) => !ele.checked);
+    let newCartList = cartList.filter((ele) => !ele.checked);
     setCarts(newCartList);
   };
+  //물품갯수 카운트
   const onClickCount = (idx: number, type: string, count: number) => {
     if (count === 2 && type === '+') {
-      setIsShow(true);
+      //2개이상 추가시 보여줄 모달 팝업
+      setModal(
+        <Modal
+          isCancelClick={() => {
+            setModal(null);
+          }}
+          isCancel={false}
+          onClick={() => {
+            setModal(null);
+          }}
+          text={'해당 옵션의 구매 가능 수량은 2개 입니다.'}
+        />
+      );
       return;
     } else if (count === 1 && type === '-') {
+      //1개 미만으로 줄일시 보여줄 모달
+      setModal(
+        <Modal
+          isCancelClick={() => {
+            setModal(null);
+          }}
+          isCancel={false}
+          onClick={() => {
+            setModal(null);
+          }}
+          text={'해당 옵션의 최소 구매 가능 수량은 1개 입니다.'}
+        />
+      );
       return;
     }
     let newCartList = cartList.map((ele, index) => {
@@ -158,17 +105,30 @@ const Cart: React.FC = () => {
     });
 
     setCarts(newCartList);
+    LocalStorage.setItem('cartList', JSON.stringify(newCartList));
   };
-  const handleCheckBox = (idx: number) => {
+  const onClickCheckAll = () => {
+    let newCartList = cartList.map((ele) => {
+      ele.checked = !ele.checked;
+      return ele;
+    });
+    setCarts(newCartList);
+    LocalStorage.setItem('cartList', JSON.stringify(newCartList));
+  };
+  //체크 하는 함수.
+  const onCickCheckBox = (idx: number) => {
+    //idx는 장바구니 리스트의 인덱스
     let newCartList = cartList.map((ele, index) => {
       if (index === idx) {
         ele.checked = !ele.checked;
       }
       return ele;
     });
-    console.log(newCartList);
     setCarts(newCartList);
+    LocalStorage.setItem('cartList', JSON.stringify(newCartList));
   };
+
+  //주문금액
   const orderPrice = useMemo(() => {
     let totalPrice = 0;
     cartList.forEach((ele) => {
@@ -176,8 +136,9 @@ const Cart: React.FC = () => {
         totalPrice += ele.count * ele.price;
       }
     });
-    return totalPrice;
+    return Math.floor(totalPrice);
   }, [cartList]);
+  //선택상품갯수
   const totalCount = useMemo(() => {
     let count = 0;
     cartList.forEach((ele) => {
@@ -186,43 +147,46 @@ const Cart: React.FC = () => {
       }
     });
     return count;
-  }, [cartList]);
+  }, [cartList, coupon]);
+  //쿠폰 할인 금액
   const couponAmount = useMemo(() => {
     let couponAmount = 0;
     cartList.forEach((ele) => {
-      if (ele.checked) {
+      if (ele.checked && ele.availableCoupon) {
         couponAmount += ele.count * ele.price;
       }
     });
-    return couponAmount;
-  }, [cartList]);
+    if (coupon.type === 'rate') {
+      let rate = coupon.discountRate as number;
+      return Math.floor(((couponAmount * rate) as number) / 100);
+    } else if (coupon.type === 'amount') {
+      let amount = coupon.discountAmount as number;
+      return Math.floor(amount);
+    }
+    return 0;
+  }, [cartList, coupon]);
+
+  const totalPrice = useMemo(() => Math.floor(orderPrice - couponAmount), [cartList, coupon]);
   return (
     <div>
-      <Modal
-        isShow={isShow}
-        onClick={() => {
-          setIsShow(false);
-        }}
-        isCancelClick={() => {
-          setIsShow(false);
-        }}
-        isCancel={false}
-        text={'해당 옵션의 구매 가능 수량은 2개 입니다.'}
-      />
-
+      {modal}
       <section css={sectionCss}>
         <div css={{ boxSizing: 'border-box', borderBottom: '1px solid rgb(0, 0, 0)' }}>
           <div css={table}>
             <div css={[tableCell, { width: '4.3%' }]}>
               <span>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  onClick={() => {
+                    onClickCheckAll();
+                  }}
+                />
               </span>
             </div>
 
             <div css={[tableCell]}>상품정보</div>
             <div css={[tableCell, { width: 200 }]}>수량</div>
             <div css={[tableCell, { width: 200 }]}>주문금액</div>
-            <div css={[tableCell, { width: '15%' }]}>쿠폰</div>
           </div>
           {cartList.map((ele, index) => (
             <CartItem
@@ -230,24 +194,64 @@ const Cart: React.FC = () => {
               idx={index}
               cart={ele}
               onClickDelete={onClickDelete}
-              handleCheckBox={handleCheckBox}
+              onCickCheckBox={onCickCheckBox}
               onClickCount={onClickCount}
-              clickInput={clickInput}
+              clickSelect={clickSelect}
               selectItem={select}
             />
           ))}
         </div>
         <div css={bottomCss}>
-          <button css={selectDelete} onClick={handleSelectedDelete}>
-            선택상품 삭제
-          </button>
-          <p css={pCss}>새로고침할때까지 저장됩니다.</p>
+          <div style={{ display: 'flex' }}>
+            <button css={selectDelete} onClick={handleSelectedDelete}>
+              선택상품 삭제
+            </button>
+            <div css={divWrap}>
+              <div css={divInner}>
+                <div role="button" css={couponButton}>
+                  <input
+                    placeholder={coupon.type === '' ? '사용 가능한 쿠폰 2개' : coupon.title}
+                    type="text"
+                    value=""
+                    css={inputCss}
+                    onClick={() => {
+                      clickSelect();
+                    }}
+                    readOnly
+                  />
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 16" css={svgCss}>
+                    <g fill="none" fillRule="evenodd" stroke="rgb(212, 212, 212)" strokeWidth="3">
+                      <path d="M28 1L13.97 15 0 1.058"></path>
+                    </g>
+                  </svg>
+                </div>
+                {select}
+              </div>
+            </div>
+          </div>
+
+          <p css={pCss}>장바구니는 캐시 삭제 전까지 저장됩니다.</p>
         </div>
       </section>
       <section>
-        <CartBottom orderPrice={orderPrice} totalCount={totalCount} />
+        <CartBottom
+          orderPrice={orderPrice}
+          couponAmount={couponAmount}
+          totalCount={totalCount}
+          totalPrice={totalPrice}
+        />
       </section>
     </div>
   );
 };
 export default Cart;
+
+export async function getServerSideProps() {
+  const res = await axios.get<Coupon[]>('http://localhost:3000/api/coupons');
+
+  return {
+    props: {
+      coupons: res.data
+    }
+  };
+}

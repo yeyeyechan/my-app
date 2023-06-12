@@ -1,4 +1,6 @@
 import { css } from '@emotion/react';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const tableBottom = css`
   display: table;
@@ -39,9 +41,12 @@ const tableBodyCellBottom = css`
 `;
 interface propsModel {
   orderPrice: number;
+  couponAmount: number;
   totalCount: number;
+  totalPrice: number;
 }
 const CartBottom: React.FC<propsModel> = (props) => {
+  const minusIcon = 'minus';
   return (
     <div>
       <div css={tableBottom}>
@@ -54,18 +59,37 @@ const CartBottom: React.FC<propsModel> = (props) => {
           <span>
             <strong>{props.orderPrice}</strong>원
           </span>
-          <span>층 {props.totalCount}개</span>
+          <span>( 층 {props.totalCount}개)</span>
+        </div>
+        <div>
+          {' '}
+          <svg
+            style={{ textAlign: 'center', alignItems: 'center', padding: '40px 0' }}
+            xmlns="http://www.w3.org/2000/svg"
+            height="1em"
+            viewBox="0 0 448 512"
+          >
+            <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
+          </svg>{' '}
         </div>
         <div css={[tableCellBottom, { width: '28%' }]}>
-          <i>{'+'}</i>
           <span>
-            <strong>금액</strong>원
+            <strong>{props.couponAmount}</strong>원
           </span>
         </div>
+        <div>
+          <svg
+            style={{ textAlign: 'center', alignItems: 'center', padding: '40px 0' }}
+            xmlns="http://www.w3.org/2000/svg"
+            height="1em"
+            viewBox="0 0 448 512"
+          >
+            <path d="M48 128c-17.7 0-32 14.3-32 32s14.3 32 32 32H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H48zm0 192c-17.7 0-32 14.3-32 32s14.3 32 32 32H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H48z" />
+          </svg>
+        </div>
         <div css={tableCellBottom}>
-          <i>{'='}</i>
           <span>
-            <strong>금액</strong>원
+            <strong>{props.totalPrice}</strong>원
           </span>
         </div>
       </div>

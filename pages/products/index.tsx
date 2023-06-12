@@ -12,6 +12,7 @@ import { NextApiRequest } from 'next';
 import Modal from '../../components/ui/Modal';
 import { UiContext } from '../../store/uiContext';
 import { ulcss } from './indexCss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const divIcon = css`
   position: relative;
   margin: 0;
@@ -28,7 +29,7 @@ const aLinkIcon = css`
   overflow: hidden;
   vertical-align: top;
   line-height: 100em;
-  background: url(https://img.29cm.co.kr/next-product/2020/12/14/3cfbcfb2cd5842939861b4add12397fe_20201214160430.jpg?width=500");
+  background: url(//img.29cm.co.kr/next-next_attach/2023/05/24/244dfcad0e1c4490b2a7d6fd85aa20fe_20230524160435.png);
   background-size: 60px 16px;
   width: 60px;
   height: 16px;

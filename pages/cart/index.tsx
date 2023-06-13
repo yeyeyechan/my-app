@@ -63,6 +63,8 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
       //2개이상 추가시 보여줄 모달 팝업
       setModal(
         <Modal
+          confirmText={'확인'}
+          cancelText={''}
           isCancelClick={() => {
             setModal(null);
           }}
@@ -78,6 +80,8 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
       //1개 미만으로 줄일시 보여줄 모달
       setModal(
         <Modal
+          confirmText={'확인'}
+          cancelText={''}
           isCancelClick={() => {
             setModal(null);
           }}

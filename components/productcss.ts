@@ -1,4 +1,23 @@
 import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+export const cartimg = css`
+  content: url('../../img/cart.svg');
+  display: block;
+  width: 24px;
+  height: 36px;
+  margin-right: auto;
+`;
+export const cartdiv = css`
+  top: 0;
+  left: 83%;
+  width: 50px;
+  height: 50px;
+  padding: 20px 20px 0 0;
+  box-sizing: border-box;
+  position: absolute;
+
+  vertical-align: top;
+`;
 const ulcss = css`
   display: flex;
   flex-wrap: wrap;
@@ -14,6 +33,7 @@ export const divIconWrap = css`
   width: 120px;
   height: 30px;
   margin: 0;
+  display: inline-block;
 `;
 export const aLinkIcon = css`
   display: inline-block;

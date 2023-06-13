@@ -16,7 +16,9 @@ import ulcss, {
   divIconWrap,
   aLinkIcon,
   paginationcss,
-  spancss
+  spancss,
+  cartimg,
+  cartdiv
 } from '../../components/productcss';
 
 const Products: React.FC<{ products: Product[] }> = (props) => {
@@ -47,6 +49,8 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
 
     setModal(
       <Modal
+        confirmText={'확인'}
+        cancelText={''}
         isCancelClick={() => {
           setModal(null);
         }}
@@ -73,11 +77,14 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
     if (newCartList.length > 3) {
       setModal(
         <Modal
+          confirmText={'장바구니로 이동'}
+          cancelText={''}
           isCancelClick={() => {
             setModal(null);
           }}
           isCancel={false}
           onClick={() => {
+            router.push('/cart');
             setModal(null);
           }}
           text={'장바구니에는 최대 세 가지의 상품이 담길 수 있습니다'}
@@ -90,6 +97,8 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
       //장바구니 클릭시 보여줄 알림 모달 창.
       setModal(
         <Modal
+          confirmText={'장바구니로 이동'}
+          cancelText={'취소'}
           isCancelClick={() => {
             setModal(null);
           }}
@@ -109,9 +118,23 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
       {modal}
       <div css={divIcon}>
         <div css={divIconWrap}>
-          <a css={aLinkIcon} href="https://www.29cm.co.kr/home/">
+          <a
+            css={aLinkIcon}
+            onClick={() => {
+              router.push('/products');
+            }}
+          >
             29CM
           </a>
+        </div>
+        <div
+          css={cartdiv}
+          onClick={() => {
+            router.push('/cart');
+          }}
+        >
+          {' '}
+          <img css={cartimg} />
         </div>
       </div>
       <ul css={ulcss}>

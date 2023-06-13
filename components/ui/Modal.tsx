@@ -21,6 +21,8 @@ const Modal: React.FC<{
   isCancel: boolean;
   isCancelClick: () => void;
   onClick: () => void;
+  confirmText: string;
+  cancelText: string;
 }> = (props) => {
   return (
     <ModalLayer>
@@ -54,7 +56,7 @@ const Modal: React.FC<{
                 props.onClick();
               }}
             >
-              확인
+              {props.confirmText}
             </button>
             {props.isCancel && (
               <button
@@ -63,7 +65,7 @@ const Modal: React.FC<{
                 }}
                 css={confirmButton}
               >
-                취소
+                {props.cancelText}
               </button>
             )}
           </div>

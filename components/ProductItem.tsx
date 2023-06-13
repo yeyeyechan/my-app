@@ -2,7 +2,15 @@ import Cart from '../model/cart';
 import Product from '../model/product';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { licss, DynamicCss, divCss, imgCss, imgDiv, contentCss } from './productItemcss';
+import {
+  licss,
+  DynamicCss,
+  divCss,
+  imgCss,
+  imgDiv,
+  contentCss,
+  ButtonImgCSS
+} from './productItemcss';
 
 const ProductItem: React.FC<{
   product: Product;
@@ -38,7 +46,7 @@ const ProductItem: React.FC<{
                   handleAddCart(cart, index);
                 }}
               >
-                장바구니담기
+                <ButtonImgCSS cart={'plus'}></ButtonImgCSS>
               </button>
             ) : (
               <button
@@ -46,7 +54,7 @@ const ProductItem: React.FC<{
                   handleDeleteCart(index);
                 }}
               >
-                장바구니빼기
+                <ButtonImgCSS cart={'minus'}></ButtonImgCSS>
               </button>
             )}
           </div>

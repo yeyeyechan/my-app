@@ -25,4 +25,14 @@ export const aLinkIcon = css`
   width: 60px;
   height: 16px;
 `;
+
+export const paginationcss = css`
+  margin-top: 30px;
+  display: flex;
+`;
+export const spancss = css`
+  width: 2.5%;
+  font-style: bold;
+  font-size: 25px;
+`;
 export default ulcss;

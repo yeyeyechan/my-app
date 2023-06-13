@@ -139,32 +139,27 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
 
   //주문금액
   const orderPrice = useMemo(() => {
-    let totalPrice = 0;
-    cartList.forEach((ele) => {
-      if (ele.checked) {
-        totalPrice += ele.count * ele.price;
-      }
-    });
+    let totalPrice = cartList.reduce((result, ele) => {
+      if (ele.checked) return result + ele.count * ele.price;
+      else return result;
+    }, 0);
     return Math.floor(totalPrice);
   }, [cartList]);
   //선택상품갯수
   const totalCount = useMemo(() => {
-    let count = 0;
-    cartList.forEach((ele) => {
-      if (ele.checked) {
-        count += ele.count;
-      }
-    });
+    let count = cartList.reduce((result, ele) => {
+      if (ele.checked) return result + 1;
+      else return result;
+    }, 0);
     return count;
   }, [cartList]);
   //쿠폰 할인 금액
   const couponAmount = useMemo(() => {
-    let couponAmount = 0;
-    cartList.forEach((ele) => {
-      if (ele.checked && ele.availableCoupon) {
-        couponAmount += ele.count * ele.price;
-      }
-    });
+    let couponAmount = cartList.reduce((result, ele) => {
+      if (ele.checked && ele.availableCoupon) return result + ele.count * ele.price;
+      else return result;
+    }, 0);
+
     if (coupon.type === 'rate') {
       let rate = coupon.discountRate as number;
       return Math.floor(((couponAmount * rate) as number) / 100);
@@ -175,7 +170,11 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
     return 0;
   }, [cartList, coupon]);
 
-  const totalPrice = useMemo(() => Math.floor(orderPrice - couponAmount), [cartList, coupon]);
+  const totalPrice = useMemo(() => {
+    let total = Math.floor(orderPrice - couponAmount);
+    total = total < 0 ? 0 : total;
+    return total;
+  }, [cartList, coupon]);
   return (
     <div>
       {modal}

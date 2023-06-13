@@ -11,7 +11,13 @@ import { ProductContext } from '../../store/productContext';
 import { NextApiRequest } from 'next';
 import Modal from '../../components/ui/Modal';
 import { UiContext } from '../../store/uiContext';
-import ulcss, { divIcon, divIconWrap, aLinkIcon } from '../../components/productcss';
+import ulcss, {
+  divIcon,
+  divIconWrap,
+  aLinkIcon,
+  paginationcss,
+  spancss
+} from '../../components/productcss';
 
 const Products: React.FC<{ products: Product[] }> = (props) => {
   const { page, setCurrentPage } = useContext(PageContext);
@@ -121,11 +127,12 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
           />
         ))}
       </ul>
-      <div>
-        <span>{'<'}</span>
+      <div css={paginationcss}>
+        <span css={spancss}>&larr;</span>
         {paginations.map((ele, index) => {
           return (
             <span
+              css={spancss}
               key={index}
               onClick={() => {
                 setCurrentPage(ele);
@@ -137,7 +144,7 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
             </span>
           );
         })}
-        <span>{'>'}</span>
+        <span css={spancss}>&rarr;</span>
       </div>
     </div>
   );

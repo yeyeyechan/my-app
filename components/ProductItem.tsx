@@ -2,42 +2,8 @@ import Cart from '../model/cart';
 import Product from '../model/product';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { licss, DynamicCss } from './ProductItemCss';
-const divCss = css`
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  overflow: hidden;
-  position: relative;
-  width: 70%;
-  background: #f5f7f6;
-`;
-const imgDiv = css`
-  overflow: hidden;
-  position: relative;
-`;
-const imgCss = css`
-  opacity: 1 !important;
-  height: auto;
-  max-width: 100%;
-  width: 100%;
-  min-height: 1px;
-  transition: opacity 0.2s ease-in-out;
-  border: 0;
-  vertical-align: top;
-  border: 0;
-  vertical-align: top;
-`;
-const contentCss = css`
-  margin-top: 15px;
-  margin-bottom: 14px;
-  line-height: 16px;
-  font-size: 12px;
-  color: #5d5d5d;
-  word-break: break-all;
-`;
+import { licss, DynamicCss, divCss, imgCss, imgDiv, contentCss } from './productItemcss';
+
 const ProductItem: React.FC<{
   product: Product;
   index: number;

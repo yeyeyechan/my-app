@@ -9,8 +9,6 @@ type UiObj = {
 const modalDefault = null;
 const selectDefault = null;
 
-//<Modal isCancelClick={() => {}} isCancel={false} isShow={false} onClick={() => {}} text={''} />
-
 export const UiContext = createContext({
   modal: modalDefault as any,
   setModal: (value: React.ReactElement | null) => {},

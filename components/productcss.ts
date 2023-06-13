@@ -1,11 +1,9 @@
 import { css } from '@emotion/react';
-import styled from '@emotion/styled';
 export const cartimg = css`
   content: url('../../img/cart.svg');
   display: block;
   width: 24px;
   height: 36px;
-  margin-right: auto;
 `;
 export const cartdiv = css`
   top: 0;

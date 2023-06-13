@@ -29,34 +29,39 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
   const [coupon, setCoupon] = useState(defaultCoupon);
   const { select, setSelect } = useContext(UiContext);
   const { modal, setModal } = useContext(UiContext);
+
   const couponData = props.coupons; //쿠폰 데이터를 가져온다.
-  const clickAllRef = useRef(null);
+  const clickAllRef = useRef(null); //전체 클릭 ref
+
   const clickSelect = () => {
-    let _coupon: Coupon[] = [
+    let _coupon = [
       {
         type: '',
         title: '사용 안함'
       }
-    ];
-    _coupon = _coupon.concat(couponData); //선택 안함 case도 넣어주기 위해.
+    ].concat(couponData); //선택 안함 case도 넣어주기 위해.
     setSelect(<SelectItem couponList={_coupon} onClickCoupon={onClickCoupon} />);
   };
+
   //쿠폰선택 함수
   const onClickCoupon = (coupon: Coupon) => {
     setCoupon(coupon); //쿠폰정보 state
     setSelect(null); //셀렉트창 올리기
   };
+
   //장바구니 목록에서 삭제
   const onClickDelete = (idx: number) => {
     let newCartList = cartList.filter((ele, index) => index !== idx);
     setCarts(newCartList);
     LocalStorage.setItem('cartList', JSON.stringify(newCartList));
   };
+
   //선택상품 전체 삭제
   const handleSelectedDelete = () => {
     let newCartList = cartList.filter((ele) => !ele.checked);
     setCarts(newCartList);
   };
+
   //물품갯수 카운트
   const onClickCount = (idx: number, type: string, count: number) => {
     if (count === 2 && type === '+') {
@@ -92,23 +97,25 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
           text={'해당 옵션의 최소 구매 가능 수량은 1개 입니다.'}
         />
       );
-      return;
-    }
-    let newCartList = cartList.map((ele, index) => {
-      if (index === idx) {
-        if (type === '+') {
-          ele.count += 1;
-        } else {
-          ele.count -= 1;
-        }
-      } else {
-        return ele;
-      }
-      return ele;
-    });
 
-    setCarts(newCartList);
-    LocalStorage.setItem('cartList', JSON.stringify(newCartList));
+      return;
+    } else {
+      let newCartList = cartList.map((ele, index) => {
+        if (index === idx) {
+          if (type === '+') {
+            ele.count += 1;
+          } else {
+            ele.count -= 1;
+          }
+        } else {
+          return ele;
+        }
+        return ele;
+      });
+
+      setCarts(newCartList);
+      LocalStorage.setItem('cartList', JSON.stringify(newCartList));
+    }
   };
   const onClickCheckAll = () => {
     const target = clickAllRef.current as any;
@@ -140,45 +147,33 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
     setCarts(newCartList);
     LocalStorage.setItem('cartList', JSON.stringify(newCartList));
   };
-
-  //주문금액
-  const orderPrice = useMemo(() => {
-    let totalPrice = cartList.reduce((result, ele) => {
-      if (ele.checked) return result + ele.count * ele.price;
-      else return result;
-    }, 0);
-    return Math.floor(totalPrice);
-  }, [cartList]);
-  //선택상품갯수
-  const totalCount = useMemo(() => {
-    let count = cartList.reduce((result, ele) => {
-      if (ele.checked) return result + 1;
-      else return result;
-    }, 0);
-    return count;
-  }, [cartList]);
-  //쿠폰 할인 금액
-  const couponAmount = useMemo(() => {
-    let couponAmount = cartList.reduce((result, ele) => {
-      if (ele.checked && ele.availableCoupon) return result + ele.count * ele.price;
-      else return result;
-    }, 0);
+  //주문금액, 쿠폰할인금액, 최종금액 계산
+  const priceObj = useMemo(() => {
+    let resultObj = cartList.reduce(
+      (result, ele) => {
+        if (ele.checked) {
+          result.orderPrice += ele.count * ele.price;
+          if (ele.availableCoupon) result.availableCoupon += ele.count * ele.price;
+        }
+        return result;
+      },
+      {
+        orderPrice: 0,
+        availableCoupon: 0,
+        couponAmount: 0
+      }
+    );
 
     if (coupon.type === 'rate') {
       let rate = coupon.discountRate as number;
-      return Math.floor(((couponAmount * rate) as number) / 100);
+      resultObj.couponAmount = Math.floor(((resultObj.availableCoupon * rate) as number) / 100);
     } else if (coupon.type === 'amount') {
       let amount = coupon.discountAmount as number;
-      return Math.floor(amount);
+      resultObj.couponAmount = Math.floor(amount);
     }
-    return 0;
+    return resultObj;
   }, [cartList, coupon]);
 
-  const totalPrice = useMemo(() => {
-    let total = Math.floor(orderPrice - couponAmount);
-    total = total < 0 ? 0 : total;
-    return total;
-  }, [cartList, coupon]);
   return (
     <div>
       {modal}
@@ -247,12 +242,7 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
         </div>
       </section>
       <section>
-        <CartBottom
-          orderPrice={orderPrice}
-          couponAmount={couponAmount}
-          totalCount={totalCount}
-          totalPrice={totalPrice}
-        />
+        <CartBottom orderPrice={priceObj.orderPrice} couponAmount={priceObj.couponAmount} />
       </section>
     </div>
   );

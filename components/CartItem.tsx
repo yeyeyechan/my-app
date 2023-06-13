@@ -14,7 +14,7 @@ import {
   rightCountButton,
   leftCountButton,
   buttonWrap
-} from './CartItemCss';
+} from './CartItemcss';
 const CartItem: React.FC<{
   idx: number;
   cart: Cart;

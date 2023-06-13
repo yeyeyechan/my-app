@@ -6,6 +6,19 @@ const tableBottom = css`
   border-top: 4px solid rgb(0, 0, 0);
   border-bottom: 1px solid rgb(228, 228, 228);
 `;
+export const couponCell = css`
+  display: table-cell;
+  padding: 0px;
+  border: 0px;
+  width: 28%;
+  height: 74px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  color: rgb(0, 0, 0);
+  vertical-align: middle;
+  text-align: center;
+`;
 export const tableCellBottom = css`
   display: table-cell;
   padding: 0px;

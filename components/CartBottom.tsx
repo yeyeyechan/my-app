@@ -1,19 +1,16 @@
 import { css } from '@emotion/react';
-import tableBottom, { tableBodyBottom, tableCellBottom } from './CartBottomCss';
+import tableBottom, { tableBodyBottom, tableCellBottom, couponCell } from './CartBottomcss';
 
-interface propsModel {
+const CartBottom: React.FC<{
   orderPrice: number;
   couponAmount: number;
-  totalCount: number;
-  totalPrice: number;
-}
-const CartBottom: React.FC<propsModel> = (props) => {
+}> = (props) => {
   const minusIcon = 'minus';
   return (
     <div>
       <div css={tableBottom}>
         <div css={tableCellBottom}>총주문금액</div>
-        <div css={[tableCellBottom, { width: '28%' }]}>쿠폰금액</div>
+        <div css={couponCell}>쿠폰금액</div>
         <div css={tableCellBottom}>총결제금액</div>
       </div>
       <div css={tableBodyBottom}>
@@ -34,7 +31,7 @@ const CartBottom: React.FC<propsModel> = (props) => {
             <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
           </svg>{' '}
         </div>
-        <div css={[tableCellBottom, { width: '28%' }]}>
+        <div css={couponCell}>
           <span>
             <strong>{props.couponAmount}</strong>원
           </span>
@@ -51,7 +48,12 @@ const CartBottom: React.FC<propsModel> = (props) => {
         </div>
         <div css={tableCellBottom}>
           <span>
-            <strong>{props.totalPrice}</strong>원
+            <strong>
+              {props.orderPrice - props.couponAmount < 0
+                ? 0
+                : props.orderPrice - props.couponAmount}
+            </strong>
+            원
           </span>
         </div>
       </div>

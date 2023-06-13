@@ -9,8 +9,8 @@ import {
 import styled from '@emotion/styled';
 const ModalLayer = styled.div`
   z-index: 2000;
-  width: 400px;
-  height: 600px;
+  width: 1000px;
+  height: 1000px;
   position: fixed;
   top: 50%;
   left: 50%;

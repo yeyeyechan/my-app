@@ -56,7 +56,7 @@ const CartItem: React.FC<{
             </a>
             <div>
               <div>{cart.item_name}</div>
-              <div>{cart.price}</div>
+              <div>{cart.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원</div>
             </div>
           </div>
           <button
@@ -109,7 +109,10 @@ const CartItem: React.FC<{
           ]}
         >
           <div>
-            <span>{cart.price * cart.count}</span>원
+            <span>
+              {(cart.price * cart.count).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            </span>
+            원
           </div>
         </div>
       </div>

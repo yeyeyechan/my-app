@@ -1,4 +1,12 @@
 import { css } from '@emotion/react';
+const ulcss = css`
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0;
+`;
+
 export const cartimg = css`
   content: url('../../img/cart.svg');
   display: block;
@@ -6,31 +14,23 @@ export const cartimg = css`
   height: 36px;
 `;
 export const cartdiv = css`
-  top: 0;
-  left: 83%;
-  width: 50px;
-  height: 50px;
-  padding: 20px 20px 0 0;
   box-sizing: border-box;
   position: absolute;
-
   vertical-align: top;
+  right: 10px;
+  display: inline-block;
 `;
-const ulcss = css`
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 0 0 -20px;
-`;
+
 export const divIcon = css`
   position: relative;
-  margin: 0;
-  padding: 0;
+  margin: 0 auto;
+  max-width: 1000px;
+  margin-top: 20px;
 `;
 export const divIconWrap = css`
-  padding: 29px 25px 0;
+  margin: 10px 0 0 0;
   width: 120px;
   height: 30px;
-  margin: 0;
   display: inline-block;
 `;
 export const aLinkIcon = css`

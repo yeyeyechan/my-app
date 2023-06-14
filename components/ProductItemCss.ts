@@ -1,11 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-export const licss = css`
-  width: 50%;
-`;
-export const ButtonImgCSS = styled.img<{ cart: string }>`
-  content: url(../../img/${(props) => (props.cart === 'plus' ? 'cartplus.svg' : 'cartminus.svg')});
-`;
+
 export const DynamicCss = styled.li<{ idx: number }>`
   margin-top: 20px;
   display: ${(props) => (props.idx !== 0 && (props.idx + 1) % 5 === 0 ? 'table' : '')};
@@ -21,18 +16,22 @@ export const divCss = css`
   position: relative;
   overflow: hidden;
   position: relative;
-  width: 70%;
-  background: #f5f7f6;
+  width: 100%;
 `;
 export const imgDiv = css`
-  overflow: hidden;
   position: relative;
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  &:after {
+    display: block;
+    content: '';
+    padding-bottom: 100%;
+  }
 `;
 export const imgCss = css`
   opacity: 1 !important;
   width: 100%;
+  height: 100%;
+  position: absolute;
   min-height: 1px;
   transition: opacity 0.2s ease-in-out;
   border: 0;
@@ -47,4 +46,10 @@ export const contentCss = css`
   font-size: 12px;
   color: #5d5d5d;
   word-break: break-all;
+`;
+export const licss = css`
+  width: 50%;
+`;
+export const ButtonImgCSS = styled.img<{ cart: string }>`
+  content: url(../../img/${(props) => (props.cart === 'plus' ? 'cartplus.svg' : 'cartminus.svg')});
 `;

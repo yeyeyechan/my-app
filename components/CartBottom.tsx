@@ -16,7 +16,7 @@ const CartBottom: React.FC<{
       <div css={tableBodyBottom}>
         <div css={tableCellBottom}>
           <span>
-            <strong>{props.orderPrice}</strong>원
+            <strong>{props.orderPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</strong>원
           </span>
           {/*<span>( 총 {props.totalCount}개)</span>*/}
         </div>
@@ -33,7 +33,7 @@ const CartBottom: React.FC<{
         </div>
         <div css={couponCell}>
           <span>
-            <strong>{props.couponAmount}</strong>원
+            <strong>{props.couponAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</strong>원
           </span>
         </div>
         <div>
@@ -51,7 +51,9 @@ const CartBottom: React.FC<{
             <strong>
               {props.orderPrice - props.couponAmount < 0
                 ? 0
-                : props.orderPrice - props.couponAmount}
+                : (props.orderPrice - props.couponAmount)
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
             </strong>
             원
           </span>

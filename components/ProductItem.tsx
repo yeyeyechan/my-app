@@ -29,7 +29,7 @@ const ProductItem: React.FC<{
           <div css={contentCss}>
             <div>{product.item_name}</div>
             <div>
-              <span>{product.price}</span>
+              <span>{product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
               <span>원</span>
             </div>
           </div>

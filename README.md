@@ -34,3 +34,21 @@ emotion 버전 : 11.11.0
 4. 쿠폰은 항상 선택가능하나 (장바구니 목록과 분리되어 있어, 미리 선택 가능하게끔), 쿠폰 불가 상품만 선택되었을때 or 아무것도 선택하지 않았을때는 쿠폰금액은 항상 0 입니다.
 
 ## 폴더 구조
+
+my-app
+┣ components
+┃ ┣ ui
+┣ data
+┣ model
+┣ pages
+┃ ┣ api
+┃ ┣ cart
+┃ ┣ products
+┣ store
+
+components : 리스트 요소로서 사용되거나, 분할해서 따로 빼놓은 컴포넌트들
+ui : 모달창, 셀렉트 창
+data : 제공받은 데이터
+model : 사용되는 객체 interface, type
+pages : 화면 (경로대로 분류 되어있습니다. (products, cart, api: 데이터 호출))
+store : context들이 있습니다.

@@ -70,7 +70,6 @@ export const couponButton = css`
 export const inputCss = css`
   border: 1px solid rgb(228, 228, 228);
   display: block;
-  width: 70%;
   outline: none;
   height: 42px;
   padding: 0px 30px 0px 14px;

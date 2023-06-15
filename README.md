@@ -51,9 +51,7 @@ my-app
 ┣ pages
 
     ┣ api
-
     ┣ cart
-
     ┣ products
 
 ┣ store

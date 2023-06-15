@@ -60,6 +60,7 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
   const handleSelectedDelete = () => {
     let newCartList = cartList.filter((ele) => !ele.checked);
     setCarts(newCartList);
+    LocalStorage.setItem('cartList', JSON.stringify(newCartList));
   };
 
   //물품갯수 카운트

@@ -9,18 +9,21 @@ npm install
 # 이후 1 or 2 번으로 진행하시면 됩니다.
 
 #1번 방법
-npm run dev
-
-#2번 방법
 npm run build
 npm run start
+
+#2번 방법
+npm run dev
 ```
 
 ## 실행 환경
 
 리액트 버전 : 18.2.0
+
 nextjs 버전: 13.4.4
+
 typescript 버전 : 5.1.3
+
 emotion 버전 : 11.11.0
 
 ## 요구사항 관련 공유 사항
@@ -36,19 +39,33 @@ emotion 버전 : 11.11.0
 ## 폴더 구조
 
 my-app
+
 ┣ components
+
 ┃ ┣ ui
+
 ┣ data
+
 ┣ model
+
 ┣ pages
+
 ┃ ┣ api
+
 ┃ ┣ cart
+
 ┃ ┣ products
+
 ┣ store
 
 components : 리스트 요소로서 사용되거나, 분할해서 따로 빼놓은 컴포넌트들
+
 ui : 모달창, 셀렉트 창
+
 data : 제공받은 데이터
+
 model : 사용되는 객체 interface, type
+
 pages : 화면 (경로대로 분류 되어있습니다. (products, cart, api: 데이터 호출))
+
 store : context들이 있습니다.

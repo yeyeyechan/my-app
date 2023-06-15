@@ -42,7 +42,7 @@ my-app
 
 ┣ components
 
-┃ ┣ ui
+┣ ui
 
 ┣ data
 
@@ -50,11 +50,11 @@ my-app
 
 ┣ pages
 
-┃ ┣ api
+┣ api
 
-┃ ┣ cart
+┣ cart
 
-┃ ┣ products
+┣ products
 
 ┣ store
 

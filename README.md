@@ -16,6 +16,10 @@ npm run start
 npm run dev
 ```
 
+상품목록화면 : http://localhost:3000/products (루트로 접속시 리다이렉트)
+
+장바구니 : http://localhost:3000/cart
+
 ## 실행 환경
 
 리액트 버전 : 18.2.0

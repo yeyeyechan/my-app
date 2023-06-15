@@ -4,7 +4,7 @@ const ulCss = css`
   position: absolute;
   left: 0px;
   z-index: 20;
-  width: 100%;
+  width: 80%;
   border-right: 1px solid rgb(212, 212, 212);
   border-bottom: 1px solid rgb(212, 212, 212);
   border-left: 1px solid rgb(212, 212, 212);

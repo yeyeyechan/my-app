@@ -225,7 +225,11 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
                     value=""
                     css={inputCss}
                     onClick={() => {
-                      clickSelect();
+                      if (select === null) {
+                        clickSelect();
+                      } else {
+                        setSelect(null);
+                      }
                     }}
                     readOnly
                   />

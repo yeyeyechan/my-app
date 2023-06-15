@@ -9,9 +9,9 @@ const CartBottom: React.FC<{
   return (
     <div>
       <div css={tableBottom}>
-        <div css={tableCellBottom}>총주문금액</div>
+        <div css={tableCellBottom}>총 주문금액</div>
         <div css={couponCell}>쿠폰금액</div>
-        <div css={tableCellBottom}>총결제금액</div>
+        <div css={tableCellBottom}>총 결제금액</div>
       </div>
       <div css={tableBodyBottom}>
         <div css={tableCellBottom}>

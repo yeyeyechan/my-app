@@ -1,34 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-## Getting Started
-
-First, run the development server:
+## 시작하는 법
 
 ```bash
+#의존성 설치 (필수)
+npm install
+
+# 이후 1 or 2 번으로 진행하시면 됩니다.
+
+#1번 방법
 npm run dev
-# or
-yarn dev
+
+#2번 방법
+npm run build
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 실행 환경
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+리액트 버전 : 18.2.0
+nextjs 버전: 13.4.4
+typescript 버전 : 5.1.3
+emotion 버전 : 11.11.0
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## 요규사항 관련 공유 사항
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+1. 상품 목록페이지는 score 기준으로 내림차순 되어있으며, 한줄에 2개씩 보여주고 있습니다. (왼쪽 -> 오른쪽)
 
-## Learn More
+2. 장바구니 담기 빼기 버튼은, 아이콘으로 대체 했습니다.
 
-To learn more about Next.js, take a look at the following resources:
+3. 전체 금액이 음수인경우 최종결제 금액은 0 입니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. 쿠폰은 항상 선택가능하나, 쿠폰 불가 상품만 선택되었을때 or 아무것도 선택하지 않았을때는 쿠폰금액은 항상 0 입니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## 폴더

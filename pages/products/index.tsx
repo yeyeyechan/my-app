@@ -118,7 +118,14 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
     }
     loadModal(modalInput);
   };
-
+  const clickArrow = (page: number) => {
+    if (page > 0 && page < 4) {
+      setCurrentPage(page);
+      router.replace(`/products?page=${page}`);
+    } else {
+      return;
+    }
+  };
   return (
     <div>
       {modal}
@@ -157,23 +164,35 @@ const Products: React.FC<{ products: Product[] }> = (props) => {
         ))}
       </ul>
       <div css={paginationcss}>
-        <span css={spancss}>&larr;</span>
+        <span
+          css={spancss}
+          onClick={() => {
+            clickArrow(page.currentPageNo - 1);
+          }}
+        >
+          &larr;
+        </span>
         {paginations.map((ele, index) => {
           return (
             <span
               css={spancss}
               key={index}
               onClick={() => {
-                setCurrentPage(ele);
-                router.replace(`/products?page=${ele}
-                `);
+                clickArrow(ele);
               }}
             >
               {ele}
             </span>
           );
         })}
-        <span css={spancss}>&rarr;</span>
+        <span
+          css={spancss}
+          onClick={() => {
+            clickArrow(page.currentPageNo + 1);
+          }}
+        >
+          &rarr;
+        </span>
       </div>
     </div>
   );

@@ -163,14 +163,16 @@ const Cart: React.FC<{ coupons: Coupon[] }> = (props) => {
         couponAmount: 0
       }
     );
-
-    if (coupon.type === 'rate') {
-      let rate = coupon.discountRate as number;
-      resultObj.couponAmount = Math.floor(((resultObj.availableCoupon * rate) as number) / 100);
-    } else if (coupon.type === 'amount') {
-      let amount = coupon.discountAmount as number;
-      resultObj.couponAmount = Math.floor(amount);
+    if (resultObj.availableCoupon !== 0) {
+      if (coupon.type === 'rate') {
+        let rate = coupon.discountRate as number;
+        resultObj.couponAmount = Math.floor(((resultObj.availableCoupon * rate) as number) / 100);
+      } else if (coupon.type === 'amount') {
+        let amount = coupon.discountAmount as number;
+        resultObj.couponAmount = Math.floor(amount);
+      }
     }
+
     return resultObj;
   }, [cartList, coupon]);
 
